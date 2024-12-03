@@ -2,7 +2,7 @@
 
 public class Player
 {
-    public string Name { get; set; }
+    public string Name;
     public int Position { get; set; }
     public int Score { get; set; }
 
@@ -26,6 +26,10 @@ public class Player
     }
 }
 
+public class Board
+{
+    public int RozmiarPl;
+}
 
 
 
@@ -37,6 +41,8 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Player player = new Player("RL9");
+        Console.WriteLine($"Gracz: {player.Name}, Pozycja: {player.Position}, Wynik: {player.Score}");
+        
     }
 }
