@@ -142,3 +142,30 @@ namespace SimpleSportsTeam
         }
     }
 }
+namespace SimpleSportsTeam
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Team team = new Team();
+
+            team.AddPlayer("Robert Lewandowski", "Napastnik", 30);
+            team.AddPlayer("Karol Linetty", "Pomocnik", 15);
+            team.AddPlayer("Wojciech Szczesny", "Bramkarz", 5);
+
+            team.ShowAllPlayers();
+
+            team.ShowPlayersByPosition("Napastnik");
+
+            team.ShowTeamAverageScore();
+
+            team.RemovePlayer("Wojciech Szczesny");
+
+            team.ShowAllPlayers();
+
+            Console.WriteLine("\nNaciśnij dowolny klawisz, aby zakończyć...");
+            Console.ReadKey();
+        }
+    }
+}
