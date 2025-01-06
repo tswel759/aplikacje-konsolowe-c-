@@ -117,3 +117,28 @@ namespace SimpleSportsTeam
         }
     }
 }
+namespace SimpleSportsTeam
+{
+    public class Team
+    {
+        // Metody AddPlayer, RemovePlayer, ShowAllPlayers, ShowPlayersByPosition...
+
+        public void ShowTeamAverageScore()
+        {
+            if (players.Count == 0)
+            {
+                Console.WriteLine("Nie można obliczyć średniej - brak zawodników");
+                return;
+            }
+
+            int totalScore = 0;
+            foreach (var player in players)
+            {
+                totalScore += player.Score;
+            }
+
+            double average = (double)totalScore / players.Count;
+            Console.WriteLine($"Średnia punktów drużyny: {average:F2}");
+        }
+    }
+}
