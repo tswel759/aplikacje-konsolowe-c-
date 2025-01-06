@@ -1,11 +1,17 @@
+using System;
+using System.Collections.Generic;
+
 namespace SimpleSportsTeam
 {
+
     public class Player
     {
-        public string Name { get; set; }
-        public string Position { get; set; }
-        public int Score { get; set; }
+  
+        public string Name { get; set; }        
+        public string Position { get; set; }   
+        public int Score { get; set; }         
 
+   
         public Player(string name, string position, int score)
         {
             Name = name;
@@ -13,40 +19,47 @@ namespace SimpleSportsTeam
             Score = score;
         }
 
+
         public void UpdateScore(int newScore)
         {
             Score = newScore;
             Console.WriteLine($"Zaktualizowano punkty dla {Name}: {Score}");
         }
     }
-}
-namespace SimpleSportsTeam
-{
+
+
     public class Team
     {
+      
         private List<Player> players;
 
+      
         public Team()
         {
             players = new List<Player>();
             Console.WriteLine("Utworzono nową drużynę!");
         }
 
+   
         public void AddPlayer(string name, string position, int score)
         {
+      
             if (string.IsNullOrEmpty(name))
             {
                 Console.WriteLine("Błąd: Imię zawodnika nie może być puste!");
                 return;
             }
 
+      
             var player = new Player(name, position, score);
             players.Add(player);
             Console.WriteLine($"Dodano zawodnika: {name} na pozycji {position}");
         }
 
+   
         public void RemovePlayer(string name)
         {
+       
             Player playerToRemove = null;
             foreach (var player in players)
             {
@@ -57,6 +70,7 @@ namespace SimpleSportsTeam
                 }
             }
 
+       
             if (playerToRemove != null)
             {
                 players.Remove(playerToRemove);
@@ -67,19 +81,13 @@ namespace SimpleSportsTeam
                 Console.WriteLine($"Nie znaleziono zawodnika o imieniu: {name}");
             }
         }
-    }
-}
-namespace SimpleSportsTeam
-{
-    public class Team
-    {
-        // Metody AddPlayer i RemovePlayer z poprzednich commitów...
 
+    
         public void ShowAllPlayers()
         {
             Console.WriteLine("\nLista wszystkich zawodników:");
             Console.WriteLine("-----------------------------");
-
+            
             if (players.Count == 0)
             {
                 Console.WriteLine("Drużyna nie ma jeszcze żadnych zawodników.");
@@ -95,11 +103,12 @@ namespace SimpleSportsTeam
             }
         }
 
+   
         public void ShowPlayersByPosition(string position)
         {
             Console.WriteLine($"\nZawodnicy na pozycji {position}:");
             Console.WriteLine("-----------------------------");
-
+            
             bool found = false;
             foreach (var player in players)
             {
@@ -115,14 +124,8 @@ namespace SimpleSportsTeam
                 Console.WriteLine($"Nie znaleziono zawodników na pozycji {position}");
             }
         }
-    }
-}
-namespace SimpleSportsTeam
-{
-    public class Team
-    {
-        // Metody AddPlayer, RemovePlayer, ShowAllPlayers, ShowPlayersByPosition...
 
+  
         public void ShowTeamAverageScore()
         {
             if (players.Count == 0)
@@ -141,9 +144,8 @@ namespace SimpleSportsTeam
             Console.WriteLine($"Średnia punktów drużyny: {average:F2}");
         }
     }
-}
-namespace SimpleSportsTeam
-{
+
+
     class Program
     {
         static void Main(string[] args)
@@ -156,7 +158,7 @@ namespace SimpleSportsTeam
 
             team.ShowAllPlayers();
 
-            team.ShowPlayersByPosition("Napastnik");
+            team.ShowPlayersByPosition("");
 
             team.ShowTeamAverageScore();
 
