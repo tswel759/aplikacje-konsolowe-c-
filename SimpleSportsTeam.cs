@@ -69,3 +69,51 @@ namespace SimpleSportsTeam
         }
     }
 }
+namespace SimpleSportsTeam
+{
+    public class Team
+    {
+        // Metody AddPlayer i RemovePlayer z poprzednich commitów...
+
+        public void ShowAllPlayers()
+        {
+            Console.WriteLine("\nLista wszystkich zawodników:");
+            Console.WriteLine("-----------------------------");
+
+            if (players.Count == 0)
+            {
+                Console.WriteLine("Drużyna nie ma jeszcze żadnych zawodników.");
+                return;
+            }
+
+            foreach (var player in players)
+            {
+                Console.WriteLine($"Imię: {player.Name}");
+                Console.WriteLine($"Pozycja: {player.Position}");
+                Console.WriteLine($"Punkty: {player.Score}");
+                Console.WriteLine("-----------------------------");
+            }
+        }
+
+        public void ShowPlayersByPosition(string position)
+        {
+            Console.WriteLine($"\nZawodnicy na pozycji {position}:");
+            Console.WriteLine("-----------------------------");
+
+            bool found = false;
+            foreach (var player in players)
+            {
+                if (player.Position == position)
+                {
+                    Console.WriteLine($"Imię: {player.Name}, Punkty: {player.Score}");
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine($"Nie znaleziono zawodników na pozycji {position}");
+            }
+        }
+    }
+}
