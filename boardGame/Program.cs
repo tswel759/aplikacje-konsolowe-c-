@@ -132,7 +132,55 @@ public class Game
         Kostka = new Random();
     }
 
-    
+    public void RozpocznijGre()
+    {
+        Console.WriteLine("Gra rozpoczyna się!");
+        bool graTrwa = true;
+        int tura = 0;
+
+        while (graTrwa)
+        {
+            IPlayer obecnyGracz = Gracze[tura % Gracze.Count];
+            Console.WriteLine($"\nTura gracza: {obecnyGracz.Name}");
+
+            int rzut = Kostka.Next(1, 7);
+            Console.WriteLine($"{obecnyGracz.Name} rzuca kostką i otrzymuje: {rzut}.");
+            obecnyGracz.Ruch(rzut);
+
+            int nagroda = Plansza.PobierzNagrode(obecnyGracz.Position);
+            if (nagroda > 0)
+            {
+                Console.WriteLine($"{obecnyGracz.Name} trafia na pole z nagrodą: {nagroda} punktów!");
+                obecnyGracz.Aktualizacja(nagroda);
+            }
+            else
+            {
+                Console.WriteLine($"{obecnyGracz.Name} trafia na pole bez nagrody.");
+            }
+
+            if (obecnyGracz is IWojownik wojownik)
+            {
+                wojownik.Walka();
+            }
+            else if (obecnyGracz is IMag mag)
+            {
+                mag.RzucZaklecie();
+            }
+            else if (obecnyGracz is IHealer healer)
+            {
+                healer.Leczenie(Gracze[(tura + 1) % Gracze.Count]);
+            }
+
+            tura++;
+
+            if (tura >= 10) 
+            {
+                graTrwa = false;
+            }
+        }
+
+        WyswietlWyniki();
+    }
 
     private void WyswietlWyniki()
     {
