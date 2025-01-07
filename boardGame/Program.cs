@@ -63,7 +63,16 @@ public class Wojownik : Player, IWojownik
     }
 }
 
+public class Mag : Player, IMag
+{
+    public Mag(string name) : base(name) { }
 
+    public void RzucZaklecie()
+    {
+        Console.WriteLine($"{Name} rzuca zaklęcie! Zwiększa wynik o 5 punktów.");
+        Aktualizacja(5);
+    }
+}
 
 
 public class Board
