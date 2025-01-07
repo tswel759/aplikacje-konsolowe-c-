@@ -1,8 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 
-public class Player
+public interface IPlayer
 {
-    public string Name;
+    string Name { get; }
+    int Position { get; set; }
+    int Score { get; set; }
+
+    void Ruch(int x);
+    void Aktualizacja(int score);
+}
+
+public interface IWojownik
+{
+    void Walka();
+}
+
+public interface IMag
+{
+    void RzucZaklecie();
+}
+
+public interface IHealer
+{
+    void Leczenie(IPlayer player);
+}
+
+public class Player : IPlayer
+{
+    public string Name { get; }
     public int Position { get; set; }
     public int Score { get; set; }
 
@@ -12,25 +38,39 @@ public class Player
         Position = 0;
         Score = 0;
     }
-    
-    public int Ruch(int x)
+
+    public virtual void Ruch(int x)
     {
         Position += x;
-        return Position;
+        Console.WriteLine($"{Name} przesuwa się na pole {Position}.");
     }
-    
-    public int Aktualizacja(int score)
+
+    public virtual void Aktualizacja(int score)
     {
         Score += score;
-        return Score;
+        Console.WriteLine($"{Name} otrzymuje {score} punktów. Obecny wynik: {Score}.");
     }
 }
 
+public class Wojownik : Player, IWojownik
+{
+    public Wojownik(string name) : base(name) { }
+
+    public void Walka()
+    {
+        Console.WriteLine($"{Name} walczy i zdobywa 10 punktów!");
+        Aktualizacja(10);
+    }
+}
+
+
+
+
 public class Board
 {
-    public int RozmiarPl { get; set; } 
-    public int[] Nagrody { get; set; } 
-    
+    public int RozmiarPl { get; set; }
+    public int[] Nagrody { get; set; }
+
     public Board(int rozmiar)
     {
         RozmiarPl = rozmiar;
@@ -38,21 +78,17 @@ public class Board
         LosujNagrody();
     }
 
-    
     public void LosujNagrody()
     {
         Random rand = new Random();
         for (int i = 0; i < RozmiarPl; i++)
         {
-            
             Nagrody[i] = rand.Next(0, 5); 
         }
     }
 
-   
     public int PobierzNagrode(int pozycja)
     {
-      
         if (pozycja >= 0 && pozycja < RozmiarPl)
         {
             return Nagrody[pozycja];
@@ -64,26 +100,93 @@ public class Board
     }
 }
 
+public class Game
+{
+    private List<IPlayer> Gracze;
+    private Board Plansza;
+    private Random Kostka;
+
+    public Game(int rozmiarPlanszy, List<IPlayer> gracze)
+    {
+        Plansza = new Board(rozmiarPlanszy);
+        Gracze = gracze;
+        Kostka = new Random();
+    }
+
+    public void RozpocznijGre()
+    {
+        Console.WriteLine("Gra rozpoczyna się!");
+        bool graTrwa = true;
+        int tura = 0;
+
+        while (graTrwa)
+        {
+            IPlayer obecnyGracz = Gracze[tura % Gracze.Count];
+            Console.WriteLine($"\nTura gracza: {obecnyGracz.Name}");
+
+            int rzut = Kostka.Next(1, 7);
+            Console.WriteLine($"{obecnyGracz.Name} rzuca kostką i otrzymuje: {rzut}.");
+            obecnyGracz.Ruch(rzut);
+
+            int nagroda = Plansza.PobierzNagrode(obecnyGracz.Position);
+            if (nagroda > 0)
+            {
+                Console.WriteLine($"{obecnyGracz.Name} trafia na pole z nagrodą: {nagroda} punktów!");
+                obecnyGracz.Aktualizacja(nagroda);
+            }
+            else
+            {
+                Console.WriteLine($"{obecnyGracz.Name} trafia na pole bez nagrody.");
+            }
+
+            if (obecnyGracz is IWojownik wojownik)
+            {
+                wojownik.Walka();
+            }
+            else if (obecnyGracz is IMag mag)
+            {
+                mag.RzucZaklecie();
+            }
+            else if (obecnyGracz is IHealer healer)
+            {
+                healer.Leczenie(Gracze[(tura + 1) % Gracze.Count]);
+            }
+
+            tura++;
+
+            if (tura >= 10) 
+            {
+                graTrwa = false;
+            }
+        }
+
+        WyswietlWyniki();
+    }
+
+    private void WyswietlWyniki()
+    {
+        Console.WriteLine("\nGra zakończona! Wyniki końcowe:");
+        foreach (var gracz in Gracze)
+        {
+            Console.WriteLine($"{gracz.Name}: {gracz.Score} punktów.");
+        }
+    }
+}
+
 internal class Program
 {
     public static void Main(string[] args)
     {
+        var gracze = new List<IPlayer>
+        {
+            new Wojownik("Wojownik1"),
+            new Mag("Mag1"),
+            new Healer("Healer1"),
+            new Wojownik("Wojownik2"),
+            new Mag("Mag2")
+        };
         
-        Player player = new Player("RL9");
-        
-        Board board = new Board(20);
-        
-        Console.WriteLine($"Gracz: {player.Name}, Pozycja: {player.Position}, Wynik: {player.Score}");
-        
-        
-        int ruch = 5;
-        player.Ruch(ruch);
-        Console.WriteLine($"Po wykonaniu ruchu o {ruch}, Pozycja: {player.Position}");
-        
-        int nagroda = board.PobierzNagrode(player.Position);
-        Console.WriteLine($"Nagroda na polu {player.Position}: {nagroda}");
-        
-        player.Aktualizacja(nagroda);
-        Console.WriteLine($"Po aktualizacji, Wynik gracza: {player.Score}");
+        Game game = new Game(20, gracze);
+        game.RozpocznijGre();
     }
 }
