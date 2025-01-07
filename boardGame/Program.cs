@@ -74,6 +74,16 @@ public class Mag : Player, IMag
     }
 }
 
+public class Healer : Player, IHealer
+{
+    public Healer(string name) : base(name) { }
+
+    public void Leczenie(IPlayer player)
+    {
+        Console.WriteLine($"{Name} leczy {player.Name} i przywraca 5 punktów.");
+        player.Aktualizacja(5);
+    }
+}
 
 public class Board
 {
